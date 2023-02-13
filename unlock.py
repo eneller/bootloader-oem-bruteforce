@@ -1,5 +1,6 @@
 # IMPORTANT: assumes that the unlock code is numeric
 import click
+import click_config_file
 import signal
 import sys
 import math
@@ -7,25 +8,29 @@ import subprocess
 import time
 
 @click.command()
-@click.option('--resume-count','-r',type=int,  default=0, help="Set the attempt number at which the bruteforce should resume in case of a stop. This number is logged by the previous run. Not necessary if running for the first time.")
+@click.option('--resume-count','-r',type=int,  default=-1, help="Set the attempt number at which the bruteforce should resume in case of a stop. This number is logged by the previous run. Not necessary if running for the first time.")
 @click.option('--limit-attempt', '-l',type=int, default=-1, help="Set the max number of attempt to perform before rebooting. On some devices a number of 5 is necessary to prevent hitting bruteforce protection. Don't use this option to set no limit.")
 @click.option('--fastboot', '-f', default='fastboot', help="Path to fastboot executable. Defaults to the one in PATH in UNIX-like, fastboot.exe on Windows")
 @click.option('--adb', '-a', default='adb', help="Path to fastboot executable. Defaults to the one in PATH in UNIX-like, adb.exe on Windows")
-# TODO add config file
-# TODO add log file
-# TODO add non-interactive delay
-def main(resume_count, limit_attempt, fastboot, adb):
-
-#  imei = int(imei)
-#  if (luhn_checksum(imei) != 0):
-#    print("Invalid IMEI. Aborting.")
-#    return
+@click.option('--imei', type=int, default=-1, help="Use the IMEI generation instead of pure brute force")
+@click_config_file.configuration_option(implicit=False, expose_value=True)
+# TODO? add log file
+# TODO add non-interactive delay(s) 
+# TODO re-add interactive confirmation
+def main(resume_count, limit_attempt, fastboot, adb, imei, config):
+  increment = 1 
+  if(imei!=-1):
+    if (not luhn_checksum(imei)):
+      print(f"{imei} is not a valid IMEI. Aborting.")
+      sys.exit(1)
+    increment = int(math.sqrt(imei)) * 1024
+    if resume_count ==-1:
+      resume_count = 1000000000000000
 
   if fastboot == "fastboot" and sys.platform in ('win32', 'cygwin'):
     fastboot = "fastboot.exe"
   if adb == "adb" and sys.platform in ('win32', 'cygwin'):
     adb = "adb.exe"
-  increment = 1 # TODO set increment to IMEI stuff if provided
   
   
   subprocess.run([adb, 'devices'])

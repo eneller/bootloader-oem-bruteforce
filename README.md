@@ -4,7 +4,14 @@
 
 After closing the official EMUI website, which allowed you to retrieve the code to unlock the bootloader of Huawei/Honor phones, here is a python script to retrieve it by yourself.
 
-It uses a bruteforce method based on the IMEI identifier to generate and test all unlocking codes.
+It uses a bruteforce method (optionally based on the IMEI identifier) to generate and test all unlocking codes, 
+assuming the codes are only numeric - the probability of guessing an alphanumeric code within your lifetime is basically zero.
+The IMEI method is the same as in scripts by [titulebolide](https://github.com/titulebolide/huawei-oem-bruteforce),[haexhub](https://github.com/titulebolide/huawei-oem-bruteforce) and [vcka](https://github.com/vcka/huawei-honor-unlock-bootloader) with the only major difference being that it actually does what it says.
+
+The main focus here is on user-friendliness, because according to `time`, one round of `fastboot oem unlock abcdefghijklmnop` takes 0,005 seconds, while my script measures an average of 0,0076 - a factor of 1,5.
+So, the performance increase of using compiled C would be noticable, but in my opinion not relevant.
+
+Please refer to [issue #4](https://github.com/eneller/bootloader-oem-bruteforce/issues/4) to report any success or lack thereof.
 
 
 
@@ -17,7 +24,7 @@ It uses a bruteforce method based on the IMEI identifier to generate and test al
 - this repository cloned or downloaded
 - USB Debugging enabled
 - OEM Unlock enabled
-- IMEI of your phone
+- Optional: IMEI of your phone
 
 ### Connecting your device
 
@@ -34,24 +41,33 @@ source .env/bin/activate
 ``` bash
 python3 -m pip install -r requirements.txt
 ```
-4. Run the script after replacing IMEI_OF_YOUR_DEVICE with your IMEI. 
-``` bash
-python3 unlock.py IMEI_OF_YOUR_DEVICE
+4. To run the script, refer to the available options:
 ```
+Usage: unlock.py [OPTIONS]
 
+Options:
+  -r, --resume-count INTEGER   Set the attempt number at which the bruteforce
+                               should resume. Defaults to 10^15 when using --imei
 
-## Advanced Instructions
-Some devices have a bruteforce protection, preventing trying more than five codes. In this case, you will have to invoke the script with the option attempt-limit:
-```bash
-python3 unlock.py --limit-attempt 5 IMEI_OF_YOUR_DEVICE
+  -l, --limit-attempt INTEGER  Set the max number of attempt to perform before
+                               rebooting. On some devices a number of 5 is
+                               necessary to prevent hitting bruteforce
+                               protection. Defaults to no limit.
+
+  -f, --fastboot TEXT          Path to fastboot executable. Defaults to the
+                               one in PATH in UNIX-like, fastboot.exe on
+                               Windows.
+
+  -a, --adb TEXT               Path to fastboot executable. Defaults to the
+                               one in PATH in UNIX-like, adb.exe on Windows.
+
+  --imei INTEGER               Use the IMEI generation instead of pure brute
+                               force.
+
+  --config FILE                Read configuration from FILE.
+
+  --help                       Show this message and exit.
 ```
-If you want to pause the process you can simply exit the script by pressing `CTRL+C`. Write down the last shown "Attempt no.".
-   - To resume invoke the script like so: `python3 unlock.py --resume-count ATTEMPT_NO IMEI_OF_YOUR_DEVICE`
-   - If you were using an attempt-limit use: `python3 unlock.py --resume-count ATTEMPT_NO --limit-attempt 5 IMEI_OF_YOUR_DEVICE`
-   
-Also, the repo includes an example udev rule that you can adjust to match 
-your device's parameters.
-You can then use it to auto-resume and pause the script upon plugging in your phone.
 
 
 ## FAQ & Troubleshooting
@@ -68,4 +84,4 @@ or by dialing `*#06#` into your phone app.
 
 Reboot from fastboot mode by holding down your power button for ~10 seconds.
 
-If adb and fastboot are not found, you can try manually setting their path with the flags `--adb` and `--fastboot`. All in all, the `python3 unlock.py --help` manual can always be useful.
+If adb and fastboot are not found, you can try manually setting their path with the flags `--adb` and `--fastboot`.
