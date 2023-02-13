@@ -4,7 +4,8 @@
 
 After closing the official EMUI website, which allowed you to retrieve the code to unlock the bootloader of Huawei/Honor phones, here is a python script to retrieve it by yourself.
 
-It uses a bruteforce method, based on the Luhn algorithm and the IMEI identifier used by the manufacturer to generate and test all unlocking codes.
+It uses a bruteforce method based on the IMEI identifier to generate and test all unlocking codes.
+
 
 
 ## Basic instructions
@@ -45,8 +46,8 @@ Some devices have a bruteforce protection, preventing trying more than five code
 python3 unlock.py --limit-attempt 5 IMEI_OF_YOUR_DEVICE
 ```
 If you want to pause the process you can simply exit the script by pressing `CTRL+C`. Write down the last shown "Attempt no.".
-   - To resume invoke the script like so: `python3 --resume-count ATTEMPT_NO IMEI_OF_YOUR_DEVICE`
-   - If you were using an attempt-limit use: `python3 --resume-count ATTEMPT_NO --limit-attempt 5 IMEI_OF_YOUR_DEVICE`
+   - To resume invoke the script like so: `python3 unlock.py --resume-count ATTEMPT_NO IMEI_OF_YOUR_DEVICE`
+   - If you were using an attempt-limit use: `python3 unlock.py --resume-count ATTEMPT_NO --limit-attempt 5 IMEI_OF_YOUR_DEVICE`
    
 Also, the repo includes an example udev rule that you can adjust to match 
 your device's parameters.
@@ -55,14 +56,16 @@ You can then use it to auto-resume and pause the script upon plugging in your ph
 
 ## FAQ & Troubleshooting
 
-Enabling developer options in Android at your phone.
+Enabling developer options in Android at your phone:
     ` Settings > System > About device ` tap _Build number_ seven times to enable developer options.
 
-Enabling USB debugging and OEM unlock in Android.
+Enabling USB debugging and OEM unlock in Android:
     ` Settings > System > Developer options`
 
 Retrieve your IMEI by either going to 
     ` Settings > System > About device `
 or by dialing `*#06#` into your phone app. 
+
+Reboot from fastboot mode by holding down your power button for ~10 seconds.
 
 If adb and fastboot are not found, you can try manually setting their path with the flags `--adb` and `--fastboot`. All in all, the `python3 unlock.py --help` manual can always be useful.
