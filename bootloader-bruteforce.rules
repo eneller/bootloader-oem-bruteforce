@@ -1,4 +1,4 @@
-# should be in /usr/lib/udev/rules.d
+# should be in /etc/udev/rules.d/
 ACTION=="add", SUBSYSTEMS=="usb", ATTR{idVendor}=="12d1", ATTR{idProduct}=="107e", ATTR{configuration}=="hisuite_mtp_mass_storage_adb_hdb",RUN+="/usr/bin/touch /home/pi/in"
 
 
