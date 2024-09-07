@@ -1,5 +1,7 @@
 # Unlock Huawei bootloader with brute force
 
+## This repository has been archived. If you are using a phone with a locked bootloader you can still try this, but it is recommended to consider paid options if available.
+
 ## Preface
 
 After closing the official EMUI website, which allowed you to retrieve the code to unlock the bootloader of Huawei/Honor phones, here is a python script to retrieve it by yourself.
@@ -10,9 +12,6 @@ The IMEI method is the same as in scripts by [titulebolide](https://github.com/t
 
 The main focus here is on user-friendliness, because according to `time`, one round of `fastboot oem unlock abcdefghijklmnop` takes 0,005 seconds, while my script measures an average of 0,0076 - a factor of 1,5.
 So, the performance increase of using compiled C would be noticable, but in my opinion not relevant.
-
-Please refer to [issue #4](https://github.com/eneller/bootloader-oem-bruteforce/issues/4) to report any success or lack thereof.
-
 
 
 ## Basic instructions
